@@ -34,6 +34,9 @@ Thumbs.db
 # Kotlin
 *.kotlin_module
 *.jar
+# ...but the Gradle wrapper jar must be committed (JitPack and fresh clones need it)
+!gradle/wrapper/gradle-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
 
 # Agent working files (research reports, doc drafts)
 /.agents/

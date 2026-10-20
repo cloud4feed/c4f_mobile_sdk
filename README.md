@@ -28,7 +28,7 @@ maven("https://jitpack.io")
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.github.cloud4feed.c4f_mobile_sdk:mobileSDK:v2.0.12")
+    implementation("com.github.cloud4feed.c4f_mobile_sdk:mobileSDK:v2.0.13")
 }
 ```
 
@@ -159,7 +159,7 @@ Configuration is managed in the Configuration Manager dashboard; see the Mobile 
 - Permissions are merged into your app manifest automatically: `INTERNET`, `ACCESS_NETWORK_STATE`, `ACCESS_FINE_LOCATION` and `ACCESS_COARSE_LOCATION`. The location permissions are added to your app even if no survey collects location, so declare them accordingly in the Google Play Console data safety form. The SDK does not ask the user for runtime permission. `PACKAGE_USAGE_STATS` is not part of the SDK; add it to your app only if a survey uses `collectAppUsage`.
 - The SDK registers two Activities in your manifest (`SurveyFullScreenActivity`, `SurveyForegroundActivity`, both `exported=false`).
 - `scrollThreshold` is a pixel value, not a percentage. The same number is a shorter distance on a high density screen (500 px is about 167 dp on a 480 dpi phone).
-- `triggerOnce` (from v2.0.12): a survey with `triggerOnce: true` is shown only once per user, for every trigger type, also after app restarts. "User" means the parameters you pass to `initialize(...)`; without parameters it is once per device. Call `clearTriggerOnceHistory()` on the SDK instance to forget it (for testing or after a sign out). Clearing the app data also resets it.
+- `triggerOnce` (from v2.0.13): a survey with `triggerOnce: true` is shown only once per user, for every trigger type, also after app restarts. "User" means the parameters you pass to `initialize(...)`; without parameters it is once per device. Call `clearTriggerOnceHistory()` on the SDK instance to forget it (for testing or after a sign out). Clearing the app data also resets it.
 - Time values in the configuration are in **milliseconds**: `timeDelay` (delay before the survey appears) and `cooldownPeriod`. `timeDelay` is applied by the navigation and app launch triggers when `triggerType` is `delayed`. Button, scroll and tab change triggers show the survey immediately.
 - When several surveys qualify, the survey with the **higher** `priority` number is preferred (10 before 1). This applies to manual `showSurvey`, the predefined button ids, the scroll and tab change triggers and the waiting queue. For app launch, navigation and a shared custom `buttonTriggerId`, the survey that comes first in the configuration is chosen first and the others wait in the queue ordered by `priority`.
 - A session is one app process, no matter how many Activities call `autoSetup()`. Exclusion rules can read the session count, screen views, session duration, time since the previous session and the app install time. Usage time (`app_usage_time`) is not measured and reads as empty.

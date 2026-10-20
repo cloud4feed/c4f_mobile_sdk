@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.c4f.cloud4feed_mobilesdk_flutter">
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+    
+    <application>
+        <!-- Flutter wrapper activities -->
+        <activity
+            android:name=".FlutterDialogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            
+        <activity
+            android:name=".FlutterBottomSheetActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            
+        <!-- Existing SDK activities (they should already be accessible) -->
+    </application>
+</manifest>

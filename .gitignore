@@ -1,0 +1,39 @@
+# Built files
+/build/
+/.kotlin/
+/.gradle/
+
+/mobileSDK/build
+/mobilesdk-react-native/android/build
+
+# Android Studio
+/.idea/
+*.iml
+*.iws
+*.ipr
+
+# Local configuration
+/local.properties
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+/captures
+/.externalNativeBuild
+/.cxx
+*.apk
+*.aar
+*.tgz
+/mobilesdk-react-native/*.tgz
+
+# Kotlin
+*.kotlin_module
+*.jar
+
+# Agent working files (research reports, doc drafts)
+/.agents/

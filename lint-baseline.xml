@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.1.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.1.0)" variant="all" version="8.1.0">
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            val matchValue = if (rule.caseSensitive) rule.matchValue else rule.matchValue.toLowerCase()"
+        errorLine2="                                                                                          ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/ExclusionRuleEvaluator.kt"
+            line="43"
+            column="91"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            val compareValue = if (rule.caseSensitive) actualValue else actualValue.toLowerCase()"
+        errorLine2="                                                                                    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/ExclusionRuleEvaluator.kt"
+            line="44"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            when (key.toLowerCase()) {"
+        errorLine2="                      ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/ExclusionRuleEvaluator.kt"
+            line="113"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                val screenName = menuItem.title?.toString()?.toLowerCase() ?: &quot;nav_item_${menuItem.itemId}&quot;"
+        errorLine2="                                                             ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/MobileSDK.kt"
+            line="576"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 22 (current min is 21): `android.content.Context#USAGE_STATS_SERVICE`"
+        errorLine1="            val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager"
+        errorLine2="                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/AppUsageUtils.kt"
+            line="12"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 23 (current min is 21): `android.Manifest.permission#PACKAGE_USAGE_STATS`"
+        errorLine1="                android.Manifest.permission.PACKAGE_USAGE_STATS"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/AppUsageUtils.kt"
+            line="19"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 23 (current min is 21): `android.content.Context#checkSelfPermission`"
+        errorLine1="            val hasUsageStatsPermission = context.checkSelfPermission("
+        errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/AppUsageUtils.kt"
+            line="18"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="OldTargetApi"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details."
+        errorLine1="        targetSdk 34"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.12.0 is available: 1.17.0"
+        errorLine1="    implementation &apos;androidx.core:core-ktx:1.12.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="49"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.7.1"
+        errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.6.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="50"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin:kotlin-stdlib than 1.9.0 is available: 2.2.0"
+        errorLine1="    implementation &apos;org.jetbrains.kotlin:kotlin-stdlib:1.9.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="51"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.security:security-crypto than 1.1.0-alpha06 is available: 1.1.0"
+        errorLine1="    implementation &apos;androidx.security:security-crypto:1.1.0-alpha06&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="52"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.10.0 is available: 1.13.0"
+        errorLine1="    implementation &apos;com.google.android.material:material:1.10.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="53"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.7.4 is available: 2.9.5"
+        errorLine1="    implementation &apos;androidx.navigation:navigation-fragment-ktx:2.7.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="54"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.7.4 is available: 2.9.5"
+        errorLine1="    implementation &apos;androidx.navigation:navigation-ui-ktx:2.7.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="55"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.recyclerview:recyclerview than 1.3.2 is available: 1.4.0"
+        errorLine1="    implementation &apos;androidx.recyclerview:recyclerview:1.3.2&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="56"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.1"
+        errorLine1="    implementation &apos;androidx.constraintlayout:constraintlayout:2.1.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="57"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.7.3 is available: 1.8.1"
+        errorLine1="    implementation &apos;org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="58"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-process than 2.7.0 is available: 2.9.4"
+        errorLine1="    implementation &apos;androidx.lifecycle:lifecycle-process:2.7.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="59"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-ktx than 1.8.0 is available: 1.11.0"
+        errorLine1="    implementation &apos;androidx.activity:activity-ktx:1.8.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="60"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.fragment:fragment-ktx than 1.6.1 is available: 1.8.9"
+        errorLine1="    implementation &apos;androidx.fragment:fragment-ktx:1.6.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="61"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.00 is available: 2025.10.00"
+        errorLine1="composeBom = &quot;2024.09.00&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="$HOME/Desktop/SDK/MobileSDK_Android/gradle/libs.versions.toml"
+            line="12"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        var animRes = activity.resources.getIdentifier(name, &quot;anim&quot;, activity.packageName)"
+        errorLine2="                                         ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/AnimationUtils.kt"
+            line="53"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        val layoutRes = resources.getIdentifier(&quot;activity_survey_webview&quot;, &quot;layout&quot;, packageName)"
+        errorLine2="                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/SurveyFullScreenActivity.kt"
+            line="24"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        val webView = findViewById&lt;WebView>(resources.getIdentifier(&quot;webView&quot;, &quot;id&quot;, packageName))"
+        errorLine2="                                                      ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/SurveyFullScreenActivity.kt"
+            line="32"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        val closeButton = findViewById&lt;Button>(resources.getIdentifier(&quot;closeButton&quot;, &quot;id&quot;, packageName))"
+        errorLine2="                                                         ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/SurveyFullScreenActivity.kt"
+            line="33"
+            column="58"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        val rootLayoutId = resources.getIdentifier(&quot;rootLayout&quot;, &quot;id&quot;, packageName)"
+        errorLine2="                                     ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/SurveyFullScreenActivity.kt"
+            line="38"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="            val resourceId = activity.resources.getIdentifier(buttonId, &quot;id&quot;, activity.packageName)"
+        errorLine2="                                                ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/MobileSDK.kt"
+            line="210"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        message="Using `getString` to get device identifiers is not recommended"
+        errorLine1="            Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) ?: &quot;unknown&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/DeviceUtils.kt"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetJavaScriptEnabled"
+        message="Using `setJavaScriptEnabled` can introduce XSS vulnerabilities into your application, review carefully"
+        errorLine1="            javaScriptEnabled = true"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/WebViewConfigurator.kt"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/WebViewConfigurator.kt"
+            line="78"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `MobileSDK` which has field `context` pointing to `Context`); this is a memory leak"
+        errorLine1="        @Volatile private var instance: MobileSDK? = null"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/MobileSDK.kt"
+            line="88"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead (androidx.core:core-ktx is already available as `androidx-core-ktx`, but using version 1.17.0 instead)"
+        errorLine1="    implementation &apos;androidx.core:core-ktx:1.12.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="49"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead (androidx.appcompat:appcompat is already available as `androidx-appcompat`, but using version 1.7.1 instead)"
+        errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.6.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="50"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;org.jetbrains.kotlin:kotlin-stdlib:1.9.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="51"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.security:security-crypto:1.1.0-alpha06&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="52"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead (com.google.android.material:material is already available as `material`, but using version 1.13.0 instead)"
+        errorLine1="    implementation &apos;com.google.android.material:material:1.10.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="53"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.navigation:navigation-fragment-ktx:2.7.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="54"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.navigation:navigation-ui-ktx:2.7.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="55"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.recyclerview:recyclerview:1.3.2&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="56"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.constraintlayout:constraintlayout:2.1.4&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="57"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="58"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.lifecycle:lifecycle-process:2.7.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="59"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.activity:activity-ktx:1.8.0&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="60"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation &apos;androidx.fragment:fragment-ktx:1.6.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="61"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use the existing version catalog reference (`libs.junit`) instead"
+        errorLine1="    testImplementation &apos;junit:junit:4.13.2&apos;"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="64"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    testImplementation &apos;org.jetbrains.kotlin:kotlin-test-junit:1.9.0&apos;"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="65"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ConstantLocale"
+        message="Assigning `Locale.getDefault()` to a final static field is suspicious; this code will not work correctly if the user changes locale while the app is running"
+        errorLine1="    private val dateFormatter = SimpleDateFormat(&quot;yyyy-MM-dd HH:mm&quot;, Locale.getDefault())"
+        errorLine2="                                                                     ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/ExclusionRuleEvaluator.kt"
+            line="13"
+            column="70"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            text = &quot;Close Survey&quot;"
+        errorLine2="                    ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/SurveyFullScreenActivity.kt"
+            line="76"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            text = &quot;Survey&quot;"
+        errorLine2="                    ~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/SurveyFullScreenActivity.kt"
+            line="92"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                text = &quot;Survey Loading Failed&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/WebViewConfigurator.kt"
+            line="120"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                text = &quot;Please check your internet connection and try again.&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/WebViewConfigurator.kt"
+            line="133"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                text = &quot;Retry&quot;"
+        errorLine2="                        ~~~~~">
+        <location
+            file="src/main/java/com/example/mobileSDK/WebViewConfigurator.kt"
+            line="146"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Close Survey&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Close Survey&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_survey_webview.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Survey&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Survey&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_survey_webview.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+</issues>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.c4f.mobileSDK.reactnative">
+
+    <application>
+        <!-- This empty manifest forces Android to process this module -->
+    </application>
+
+</manifest>

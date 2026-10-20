@@ -1,0 +1,44 @@
+{
+  "name": "@cloud4feed/mobilesdk-react-native",
+  "version": "1.2.17",
+  "description": "React Native Survey SDK with automatic triggers and user targeting",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "react-native",
+    "survey",
+    "sdk",
+    "feedback",
+    "analytics"
+  ],
+  "author": "Cloud4Feed",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloud4feed/c4f_mobile_sdk.git"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.60.0"
+  },
+  "files": [
+    "android",
+    "lib",
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "react-native.config.js",
+    "ios",
+    "expo-plugin.js"
+  ],
+  "expo-plugin": "./expo-plugin.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "bugs": {
+    "url": "https://github.com/cloud4feed/c4f_mobile_sdk/issues"
+  },
+  "homepage": "https://github.com/cloud4feed/c4f_mobile_sdk#readme"
+}

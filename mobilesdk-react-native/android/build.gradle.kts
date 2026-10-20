@@ -57,9 +57,9 @@ dependencies {
 
     //implementation(project(":mobileSDK"))
     // USE TAG NUMBER FOR NPM RELEASE
-    implementation("com.github.cloud4feed.c4f_mobile_sdk:mobileSDK:v2.0.14")
+    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.14")
     // WHILE YOU DONT HAVE TAG NUMBER
-    // implementation("com.github.cloud4feed.c4f_mobile_sdk:mobileSDK:main-SNAPSHOT")
+    // implementation("com.github.cloud4feed:c4f_mobile_sdk:main-SNAPSHOT")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.annotation:annotation:1.7.0")

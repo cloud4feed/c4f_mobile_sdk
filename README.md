@@ -28,7 +28,7 @@ maven("https://jitpack.io")
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.15")
+    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.16")
 }
 ```
 

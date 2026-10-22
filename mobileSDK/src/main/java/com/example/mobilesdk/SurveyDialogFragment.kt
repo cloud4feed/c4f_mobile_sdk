@@ -237,6 +237,10 @@ class SurveyDialogFragment : DialogFragment() {
                 webView = webView,
                 url = url,
                 allowedDomain = allowedDomain,
+                // So the Close button on the "Survey Loading Failed" error layout
+                // actually closes the dialog. Without this the callback is null and
+                // Close does nothing.
+                onSurveyClosed = { dismissAllowingStateLoss() },
             )
             Log.d("SurveyDialog", "✅ WebView configured successfully")
         } catch (e: Exception) {

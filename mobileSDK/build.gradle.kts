@@ -85,7 +85,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.cloud4feed"
                 artifactId = "mobileSDK"
-                version = "2.0.15"
+                version = "2.0.16"
             }
         }
     }

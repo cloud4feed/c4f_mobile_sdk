@@ -72,7 +72,7 @@ In `app/build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.16")
+    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.17")
 }
 ```
 
@@ -80,7 +80,7 @@ In Groovy `app/build.gradle`:
 
 ```groovy
 dependencies {
-    implementation 'com.github.cloud4feed:c4f_mobile_sdk:v2.0.16'
+    implementation 'com.github.cloud4feed:c4f_mobile_sdk:v2.0.17'
 }
 ```
 

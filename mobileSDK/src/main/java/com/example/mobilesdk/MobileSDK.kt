@@ -1439,8 +1439,14 @@ class MobileSDK private constructor(
         lastPauseTime = 0
         lastStopTime = 0
         activeActivities.clear()
-        currentContextName = null
-        previousScreen = null
+        // NOTE: currentContextName / previousScreen are the user's CURRENT screen
+        // position, not survey-tracking state. Reloading the configuration (or
+        // updating parameters) does not move the user to a different screen, so
+        // these must survive a tracking reset. Clearing them here previously wiped
+        // the screen context right after config load, which made the SESSION
+        // "current_screen" custom param resolve to null until the next navigation,
+        // and dropped the first exit trigger (previousScreen was null). They are
+        // updated only by real screen transitions (handleScreenTransition / tab change).
         
         Log.d("MobileSDK", "✅ Survey tracking reset")
     }

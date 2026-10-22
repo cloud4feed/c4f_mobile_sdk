@@ -218,7 +218,9 @@ object ExclusionRuleEvaluator {
     // ===== TIMESTAMP VALUES =====
     internal fun getTimestampValue(format: String): String {
         return when (format) {
-            "millis" -> System.currentTimeMillis().toString()
+            // "timestamp" / "current_time" are the Configuration Manager labels for epoch
+            // milliseconds; map them explicitly so the result does not rely on the else branch.
+            "millis", "timestamp", "current_time" -> System.currentTimeMillis().toString()
             "seconds" -> (System.currentTimeMillis() / 1000).toString()
             "iso" -> dateFormatter.format(Date(System.currentTimeMillis()))
             "hour" -> Calendar.getInstance().get(Calendar.HOUR_OF_DAY).toString()

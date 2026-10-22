@@ -9,28 +9,36 @@ object AnimationUtils {
 
     fun applyEnterTransition(activity: Activity, animationType: String) {
         val (enterAnim, exitAnim) = getAnimationPair(animationType, true)
-        applyTransition(activity, enterAnim, exitAnim)
+        applyTransition(activity, enterAnim, exitAnim, isOpen = true)
     }
 
     fun applyExitTransition(activity: Activity, animationType: String) {
         val (enterAnim, exitAnim) = getAnimationPair(animationType, false)
-        applyTransition(activity, enterAnim, exitAnim)
+        applyTransition(activity, enterAnim, exitAnim, isOpen = false)
     }
 
-    private fun applyTransition(activity: Activity, enterAnimName: String, exitAnimName: String) {
+    private fun applyTransition(
+        activity: Activity,
+        enterAnimName: String,
+        exitAnimName: String,
+        isOpen: Boolean
+    ) {
         val (enterAnim, exitAnim) = getAnimPair(activity, enterAnimName, exitAnimName)
+        if (enterAnim == 0 && exitAnim == 0) return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && activity is AppCompatActivity) {
-            val transitionType = if (enterAnimName.contains("enter")) {
+            // The transition type must reflect whether the activity is opening or
+            // closing, not the animation resource name. Deriving it from the name
+            // (looking for "enter") was always false here, so the OPEN override was
+            // never registered and the system played its default transition.
+            val transitionType = if (isOpen) {
                 AppCompatActivity.OVERRIDE_TRANSITION_OPEN
             } else {
                 AppCompatActivity.OVERRIDE_TRANSITION_CLOSE
             }
             activity.overrideActivityTransition(transitionType, enterAnim, exitAnim)
         } else {
-            if (enterAnim != 0 || exitAnim != 0) {
-                activity.overridePendingTransition(enterAnim, exitAnim)
-            }
+            activity.overridePendingTransition(enterAnim, exitAnim)
         }
     }
 

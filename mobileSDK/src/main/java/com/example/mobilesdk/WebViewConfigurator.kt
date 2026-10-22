@@ -48,7 +48,10 @@ object WebViewConfigurator {
             domStorageEnabled = true
             allowFileAccess = false
             allowContentAccess = false
-            mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+            // Survey links are often shortened URLs that redirect, sometimes to an
+            // http target. Use compatibility mode so an https survey page can still
+            // follow such redirects / load their resources instead of a blank page.
+            mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
             cacheMode = WebSettings.LOAD_DEFAULT
             
             // Additional security settings
@@ -58,7 +61,7 @@ object WebViewConfigurator {
             }
             
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+                mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
             }
             
             // Performance settings
@@ -167,23 +170,19 @@ object WebViewConfigurator {
             
             // ============ HELPER METHOD ============
             private fun handleUrlLoading(url: String, allowedDomain: String?): Boolean {
-                val shouldAllow = isUrlAllowed(url, allowedDomain)
-                Log.d("WebViewConfigurator", "🔗 Allowed: $shouldAllow")
-
-                if (shouldAllow) {
-                    errorOccurred = false
-                    return false // Allow navigation
-                } else {
-                    Log.w("WebViewConfigurator", "🚫 Blocked navigation to: $url")
-                    
-                    // Check if it's a special URL that should be opened externally
-                    if (isSpecialUrl(url)) {
-                        openUrlExternally(url, webView.context)
-                        return true // Override - handled externally
-                    }
-                    
-                    return true // Block navigation
+                // Special schemes (mailto:, tel:, market://, intent:// ...) are opened
+                // by the matching external app, never inside the survey WebView.
+                if (isSpecialUrl(url)) {
+                    openUrlExternally(url, webView.context)
+                    return true // Handled externally
                 }
+
+                // Web navigation is NOT restricted by domain. Survey links are often
+                // shortened URLs (ShortIO, bit.ly, custom shorteners) that redirect to
+                // an arbitrary host, so there is no fixed domain to allow-list. Let the
+                // WebView follow http/https navigation and redirects freely.
+                errorOccurred = false
+                return false // Allow navigation
             }
         }
     }
@@ -339,20 +338,6 @@ object WebViewConfigurator {
     // ====================================================================
     // URL VALIDATION & HANDLING
     // ====================================================================
-    private fun isUrlAllowed(url: String, allowedDomain: String?): Boolean {
-        if (allowedDomain.isNullOrEmpty()) {
-            return true
-        }
-
-        return try {
-            val uri = Uri.parse(url)
-            val host = uri.host ?: return false
-            host == allowedDomain || host.endsWith(".$allowedDomain")
-        } catch (e: Exception) {
-            false
-        }
-    }
-
     private fun isSpecialUrl(url: String): Boolean {
         return url.startsWith("mailto:") ||
                url.startsWith("tel:") ||

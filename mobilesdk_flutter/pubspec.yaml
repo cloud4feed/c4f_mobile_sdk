@@ -1,6 +1,6 @@
 name: cloud4feed_mobilesdk_flutter
 description: Flutter plugin for Survey SDK with automatic triggers, user targeting, and exclusion rules. Display surveys seamlessly in your Flutter apps.
-version: 1.2.15
+version: 1.2.16
 homepage: https://github.com/cloud4feed/c4f_mobile_sdk
 repository: https://github.com/cloud4feed/c4f_mobile_sdk
 issue_tracker: https://github.com/cloud4feed/c4f_mobile_sdk/issues

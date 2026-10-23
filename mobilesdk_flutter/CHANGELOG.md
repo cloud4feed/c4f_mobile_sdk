@@ -34,3 +34,8 @@
 
 - Bumped native Android SDK to c4f_mobile_sdk v2.0.17
 - SESSION `current_screen` custom param now survives a configuration reload; TIMESTAMP `timestamp`/`current_time` keys mapped explicitly
+
+## 1.2.16
+
+- Bumped native Android SDK to c4f_mobile_sdk v2.0.18
+- Scroll trigger now respects `triggerScreens` on the bridge path: a scroll survey scoped to specific screens no longer fires on other screens (previously the manual/bridge scroll path skipped the screen filter)

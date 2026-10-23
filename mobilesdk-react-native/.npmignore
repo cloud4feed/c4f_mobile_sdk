@@ -1,0 +1,17 @@
+# Android build outputs — never ship these in the npm package
+android/build/
+android/.gradle/
+android/.cxx/
+**/build/
+**/.gradle/
+
+# Gradle wrapper / local
+*.iml
+local.properties
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

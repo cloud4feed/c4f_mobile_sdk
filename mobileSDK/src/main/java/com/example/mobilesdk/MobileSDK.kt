@@ -675,10 +675,21 @@ class MobileSDK private constructor(
     fun triggerScrollManual(activity: Activity, scrollY: Int = 500) {
         Log.d("MobileSDK", "RN: Manual scroll trigger check (y=$scrollY)")
 
+        // Resolve the current screen the same way the native scroll listener does,
+        // so manual (RN/Flutter bridge) scroll respects triggerScreens too.
+        val activeContext = currentContextName
+            ?: previousScreen
+            ?: activity.javaClass.simpleName.lowercase()
+
         val matchingSurveys = config.surveys.filter { survey ->
             val meetsThreshold = scrollY >= survey.scrollThreshold
+            // Match checkScrollThreshold: empty triggerScreens = any screen; otherwise
+            // the active screen must be in the list. Without this, a scroll survey scoped
+            // to one screen fired on every screen in RN/Flutter (native path already filtered).
+            val matchesScreen = survey.triggerScreens.isEmpty() ||
+                survey.triggerScreens.any { activeContext.contains(it, ignoreCase = true) }
             val canShow = canShowSurvey(survey)
-            survey.enableScrollTrigger && meetsThreshold && canShow
+            survey.enableScrollTrigger && meetsThreshold && matchesScreen && canShow
         }
 
         if (matchingSurveys.isNotEmpty()) {

@@ -25,3 +25,12 @@
 ## 1.2.13
 
 - changed version
+
+## 1.2.14
+
+- Bumped native Android SDK to c4f_mobile_sdk v2.0.16 (WebView redirect handling, animation and close-button fixes)
+
+## 1.2.15
+
+- Bumped native Android SDK to c4f_mobile_sdk v2.0.17
+- SESSION `current_screen` custom param now survives a configuration reload; TIMESTAMP `timestamp`/`current_time` keys mapped explicitly

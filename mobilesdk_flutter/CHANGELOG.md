@@ -39,3 +39,8 @@
 
 - Bumped native Android SDK to c4f_mobile_sdk v2.0.18
 - Scroll trigger now respects `triggerScreens` on the bridge path: a scroll survey scoped to specific screens no longer fires on other screens (previously the manual/bridge scroll path skipped the screen filter)
+
+## 1.3.0
+- **iOS support** (iOS 15+). The native iOS SDK (Cloud4Feed iOS SDK 1.0.0) is bundled in the
+  plugin; no extra Podfile line is needed. Same Dart API on Android and iOS.
+- iOS apps built with the iOS 27 SDK must use the UIScene life cycle (see README).

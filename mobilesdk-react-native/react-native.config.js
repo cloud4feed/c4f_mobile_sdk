@@ -5,7 +5,8 @@ module.exports = {
         packageImportPath: 'import com.c4f.mobileSDK.reactnative.MobileSDKPackage;',
         packageInstance: 'new MobileSDKPackage()'
       },
-      ios: null
+      // iOS is autolinked from cloud4feed-mobilesdk-react-native.podspec
+      ios: {}
     }
   }
 };

@@ -1,0 +1,1 @@
+Bundled iOS SDK 1.0.0 (commit 394b620). Do not edit these files here; change c4f_mobile_sdk_ios and run scripts/sync-ios-sdk.ps1.

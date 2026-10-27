@@ -7,7 +7,7 @@ Cloud4Feed survey SDK for Flutter: automatic triggers, user targeting and exclus
 
 ```yaml
 dependencies:
-  cloud4feed_mobilesdk_flutter: ^1.3.0
+  cloud4feed_mobilesdk_flutter: ^1.3.1
 ```
 
 ### Android
@@ -25,7 +25,8 @@ The iOS SDK is bundled in the plugin; no extra repository is needed.
 - Minimum iOS 15: in `ios/Podfile` use `platform :ios, '15.0'` (recent Flutter versions set
   this automatically), then `flutter build ios` / `pod install`.
 - Apps built with the iOS 27 SDK must use the **UIScene** life cycle, otherwise they close at
-  launch. New Flutter projects already do. For older projects add to `ios/Runner/Info.plist`:
+  launch. If `ios/Runner/Info.plist` has no `UIApplicationSceneManifest` entry, add it
+  (`AppDelegate.swift` stays unchanged):
 
 ```xml
 <key>UIApplicationSceneManifest</key>

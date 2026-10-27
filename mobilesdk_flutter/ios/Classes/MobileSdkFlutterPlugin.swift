@@ -25,7 +25,9 @@ public final class MobileSdkFlutterPlugin: NSObject, FlutterPlugin {
 
     public func application(_ application: UIApplication, open url: URL,
                             options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        sdk?.handle(url: url)
+        // A cold-start link can arrive before Dart calls initialize; the SDK keeps it and
+        // applies it when it starts (iOS SDK 1.0.1+), so it is never lost.
+        MobileSDK.handle(url: url)
         return false // let other plugins / the app handle the link too
     }
 

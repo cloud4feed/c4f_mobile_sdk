@@ -33,12 +33,7 @@ public final class C4FReactNativeBridge: NSObject {
                 }
             }
         }
-        let sdk = MobileSDK.initialize(apiKey: apiKey, parameters: direct, lookupKeys: lookupKeys)
-        // A cold-start deep link arrives before JavaScript calls initialize; apply it now.
-        if let url = pendingURL {
-            pendingURL = nil
-            sdk.handle(url: url)
-        }
+        MobileSDK.initialize(apiKey: apiKey, parameters: direct, lookupKeys: lookupKeys)
     }
 
     /// React Native draws its own views: hybrid mode (screens from `trackScreenView`,
@@ -79,16 +74,9 @@ public final class C4FReactNativeBridge: NSObject {
 
     @objc public static func resetSessionData() { sdk?.resetSessionData() }
 
-    /// Deep link received before `initialize` (cold start); applied once the SDK starts.
-    private static var pendingURL: URL?
-
-    @objc public static func handle(url: URL) {
-        if let sdk = sdk {
-            sdk.handle(url: url)
-        } else {
-            pendingURL = url
-        }
-    }
+    /// Deep link (URL value source). A cold-start link arrives before JavaScript calls
+    /// `initialize`; the SDK keeps it and applies it when it starts (iOS SDK 1.0.1+).
+    @objc public static func handle(url: URL) { MobileSDK.handle(url: url) }
 
     // MARK: Status
 

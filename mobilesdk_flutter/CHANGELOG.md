@@ -44,3 +44,8 @@
 - **iOS support** (iOS 15+). The native iOS SDK (Cloud4Feed iOS SDK 1.0.0) is bundled in the
   plugin; no extra Podfile line is needed. Same Dart API on Android and iOS.
 - iOS apps built with the iOS 27 SDK must use the UIScene life cycle (see README).
+
+## 1.3.1
+
+- iOS: a deep link that opens the app while it is not running is no longer lost when it arrives
+  before `MobileSdkFlutter.initialize` (bundled iOS SDK 1.0.1 keeps it until the SDK starts).

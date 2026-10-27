@@ -42,8 +42,58 @@ The iOS SDK is bundled in the package; no extra repository is needed.
 2. `cd ios && pod install`
 
 3. Apps built with the iOS 27 SDK must use the **UIScene** life cycle, otherwise they close at
-   launch without an error. React Native 0.76+ templates already do; older apps need a
-   `SceneDelegate` and a `UIApplicationSceneManifest` entry in `Info.plist`.
+   launch without an error. If your `Info.plist` has no `UIApplicationSceneManifest` entry (the
+   React Native 0.74 and Expo SDK 54 templates have none), add one plus a `SceneDelegate` that
+   moves the React Native window into the scene and forwards links to `RCTLinkingManager`:
+
+   ```objc
+   // SceneDelegate.m  (SceneDelegate.h: @interface SceneDelegate : UIResponder <UIWindowSceneDelegate>
+   //                    @property (nonatomic, strong) UIWindow *window; @end)
+   #import "SceneDelegate.h"
+   #import "AppDelegate.h"
+   #import <React/RCTLinkingManager.h>
+
+   @implementation SceneDelegate
+   - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session
+         options:(UISceneConnectionOptions *)connectionOptions {
+     if (![scene isKindOfClass:[UIWindowScene class]]) { return; }
+     AppDelegate *app = (AppDelegate *)UIApplication.sharedApplication.delegate;
+     UIViewController *root = app.window.rootViewController;
+     app.window.rootViewController = nil;
+     UIWindow *window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
+     window.rootViewController = root;
+     self.window = window;
+     app.window = window;
+     [window makeKeyAndVisible];
+     NSURL *url = connectionOptions.URLContexts.anyObject.URL;
+     if (url) { [RCTLinkingManager application:UIApplication.sharedApplication openURL:url options:@{}]; }
+   }
+   - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+     NSURL *url = URLContexts.anyObject.URL;
+     if (url) { [RCTLinkingManager application:UIApplication.sharedApplication openURL:url options:@{}]; }
+   }
+   @end
+   ```
+
+   ```xml
+   <key>UIApplicationSceneManifest</key>
+   <dict>
+     <key>UIApplicationSupportsMultipleScenes</key><false/>
+     <key>UISceneConfigurations</key>
+     <dict>
+       <key>UIWindowSceneSessionRoleApplication</key>
+       <array>
+         <dict>
+           <key>UISceneConfigurationName</key><string>Default</string>
+           <key>UISceneDelegateClassName</key><string>SceneDelegate</string>
+         </dict>
+       </array>
+     </dict>
+   </dict>
+   ```
+
+   Deep links (URL value source) need no JavaScript: links that reach `RCTLinkingManager` are
+   passed to the SDK, also when they open a closed app.
 
 ## Usage
 

@@ -49,3 +49,14 @@
 
 - iOS: a deep link that opens the app while it is not running is no longer lost when it arrives
   before `MobileSdkFlutter.initialize` (bundled iOS SDK 1.0.1 keeps it until the SDK starts).
+
+## 1.3.2
+
+- Scroll trigger uses the **Scroll Threshold from the Configuration Manager** on Android and iOS.
+  `SurveyScrollView` and `MobileSdkWrapper` report the scroll position in physical pixels (the
+  panel's unit, logical offset × devicePixelRatio). Before, `SurveyScrollView` used its own
+  `threshold` (default 300 logical pixels) and `MobileSdkWrapper` sent logical pixels, so the
+  survey opened later than configured (about 3× on a 3.0 density device).
+- `SurveyScrollView(threshold:)` is deprecated and ignored.
+- A scroll survey opens at most once per screen visit, like native apps (native Android SDK
+  v2.0.19).

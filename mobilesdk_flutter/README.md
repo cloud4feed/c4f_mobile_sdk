@@ -7,7 +7,7 @@ Cloud4Feed survey SDK for Flutter: automatic triggers, user targeting and exclus
 
 ```yaml
 dependencies:
-  cloud4feed_mobilesdk_flutter: ^1.3.1
+  cloud4feed_mobilesdk_flutter: ^1.3.2
 ```
 
 ### Android
@@ -62,7 +62,8 @@ MobileSdkFlutter.triggerNavigation('Home');
 SurveyTrigger(triggerId: 'my_custom_button', child: ElevatedButton(...));
 
 // Scroll
-SurveyScrollView(threshold: 300, child: ...);
+SurveyScrollView(child: ...);   // opens at the panel's Scroll Threshold (physical pixels)
+// or wrap the whole app: MobileSdkWrapper(child: MaterialApp(...))
 ```
 
 Use the same screen, tab and button names on Android and iOS: one Configuration Manager setup

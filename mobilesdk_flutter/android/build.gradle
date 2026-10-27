@@ -54,7 +54,7 @@ dependencies {
     // IF YOU MADE ANY CHANGES WTIH CORE MODULES, USE PROJECT IMPLEMENTATION FOR JITPACK BUILD AND COMMEND OUT LATER FOR RELEASE
     //implementation project(':mobileSDK')
     // USE TAG NUMBER FOR NPM RELEASE
-    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.18")
+    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.19")
     // WHILE YOU DONT HAVE TAG NUMBER, BUT NOT PREFERRED
     //implementation 'com.github.cloud4feed:c4f_mobile_sdk:main-SNAPSHOT'
 

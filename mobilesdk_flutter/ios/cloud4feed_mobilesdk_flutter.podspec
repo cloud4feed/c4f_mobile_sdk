@@ -5,7 +5,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'cloud4feed_mobilesdk_flutter'
-  s.version          = '1.3.1'
+  s.version          = '1.3.2'
   s.summary          = 'Cloud4Feed survey SDK for Flutter (iOS).'
   s.description      = 'Shows Cloud4Feed surveys with automatic triggers, user targeting and exclusion rules.'
   s.homepage         = 'https://github.com/cloud4feed/c4f_mobile_sdk'

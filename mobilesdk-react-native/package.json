@@ -1,6 +1,6 @@
 {
   "name": "cloud4feed-mobilesdk-react-native",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "React Native Survey SDK with automatic triggers and user targeting",
   "main": "index.js",
   "types": "index.d.ts",

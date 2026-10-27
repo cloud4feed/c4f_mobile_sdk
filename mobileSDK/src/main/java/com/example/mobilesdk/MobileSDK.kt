@@ -370,7 +370,17 @@ class MobileSDK private constructor(
     private var previousScreen: String? = null
     private val viewsWithScrollListeners = java.util.WeakHashMap<View, Boolean>()
     private val surveyTriggerTimestamps = ConcurrentHashMap<String, Long>()
+    // Every screen / tab report starts a new screen visit for the manual (bridge) scroll lock.
     private var currentContextName: String? = null
+        set(value) {
+            field = value
+            manualScrollFired.clear()
+        }
+    // Manual (RN / Flutter bridge) scroll: surveys already shown on the current screen visit.
+    // Bridges report the scroll position repeatedly; without this a scroll survey reopened on
+    // the same screen once its cooldown passed (the native listeners lock with localTriggered).
+    private val manualScrollFired = mutableSetOf<String>()
+    private var manualScrollContext: String? = null
     private var lastActivity: Activity? = null
     private var processLifecycleSetup = false
     private var lastPauseTime: Long = 0
@@ -681,7 +691,15 @@ class MobileSDK private constructor(
             ?: previousScreen
             ?: activity.javaClass.simpleName.lowercase()
 
+        // A scroll survey opens at most once per screen visit (same as the native listeners
+        // and the iOS SDK). A different screen than last time starts a new visit.
+        if (activeContext != manualScrollContext) {
+            manualScrollContext = activeContext
+            manualScrollFired.clear()
+        }
+
         val matchingSurveys = config.surveys.filter { survey ->
+            if (survey.surveyId in manualScrollFired) return@filter false
             val meetsThreshold = scrollY >= survey.scrollThreshold
             // Match checkScrollThreshold: empty triggerScreens = any screen; otherwise
             // the active screen must be in the list. Without this, a scroll survey scoped
@@ -695,6 +713,7 @@ class MobileSDK private constructor(
         if (matchingSurveys.isNotEmpty()) {
             val bestSurvey = findHighestPrioritySurvey(matchingSurveys)
             Log.d("MobileSDK", "RN: Triggering scroll survey: ${bestSurvey.surveyId}")
+            manualScrollFired.add(bestSurvey.surveyId)
             showSingleSurvey(activity, bestSurvey)
         }
     }
@@ -1372,6 +1391,7 @@ class MobileSDK private constructor(
         delayExecutors.clear()
         navigationListenersSet.clear()
         lastNavigationTriggerTime = 0
+        manualScrollFired.clear()
     }
 
     fun cleanup() {

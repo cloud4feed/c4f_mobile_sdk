@@ -129,8 +129,11 @@ class MobileSdkFlutter {
     }
   }
 
-  /// Manually triggers scroll logic.
-  /// Matches surveys with 'enableScrollTrigger' == true based on [scrollY].
+  /// Reports the current scroll position of the screen to the scroll trigger.
+  /// [scrollY] is in **physical pixels** (Flutter's logical offset × devicePixelRatio), the
+  /// unit of the Configuration Manager's Scroll Threshold. A scroll survey opens once per
+  /// screen visit when [scrollY] reaches its threshold. [MobileSdkWrapper] and
+  /// [SurveyScrollView] call this for you.
   static Future<void> triggerScroll({int scrollY = 500}) async {
     try {
       await _channel.invokeMethod('triggerScroll', {'scrollY': scrollY});
@@ -370,21 +373,15 @@ class MobileSdkWrapper extends StatefulWidget {
 }
 
 class _MobileSdkWrapperState extends State<MobileSdkWrapper> {
-  int _lastSentScrollY = 0; 
+  final _SurveyScrollReporter _reporter = _SurveyScrollReporter();
 
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification notification) {
-        if (notification is ScrollUpdateNotification && notification.metrics.axis == Axis.vertical) {
-          
-          int currentScrollY = notification.metrics.pixels.toInt();
-          
-          // Only talk to Kotlin if the scroll depth changed by at least 50 pixels.
-          if ((currentScrollY - _lastSentScrollY).abs() >= 50) {
-            _lastSentScrollY = currentScrollY;
-            MobileSdkFlutter.triggerScroll(scrollY: currentScrollY);
-          }
+        if (notification is ScrollUpdateNotification &&
+            notification.metrics.axis == Axis.vertical) {
+          _reporter.report(context, notification.metrics.pixels);
         }
         return false; // Let the scroll continue normally
       },
@@ -393,16 +390,42 @@ class _MobileSdkWrapperState extends State<MobileSdkWrapper> {
   }
 }
 
+/// Converts Flutter's logical scroll offset to physical pixels (the unit of the Configuration
+/// Manager's Scroll Threshold, also used by the native SDKs) and reports it to the native SDK
+/// when it changed by at least [_minStepPixels]. The native SDK compares it with the threshold
+/// and opens a scroll survey at most once per screen visit.
+class _SurveyScrollReporter {
+  static const int _minStepPixels = 50;
+  int? _lastSent;
+
+  void report(BuildContext context, double logicalOffset) {
+    if (logicalOffset <= 0) return;
+    final ratio = MediaQuery.maybeOf(context)?.devicePixelRatio ?? 1.0;
+    final pixels = (logicalOffset * ratio).round();
+    final last = _lastSent;
+    if (last != null && (pixels - last).abs() < _minStepPixels) return;
+    _lastSent = pixels;
+    MobileSdkFlutter.triggerScroll(scrollY: pixels);
+  }
+}
+
 /// 3. LOCAL SCROLL TRIGGER WIDGET
-/// Wraps content in a SingleChildScrollView that automatically reports scroll events.
+/// Wraps content in a SingleChildScrollView that reports its scroll position. The survey opens
+/// at the Scroll Threshold set in the Configuration Manager (physical pixels), once per screen
+/// visit — the same as native Android / iOS apps.
 class SurveyScrollView extends StatefulWidget {
   final Widget child;
-  final int threshold; // Match this to your Cloud4Feed JSON!
+
+  /// No longer used: the Configuration Manager's Scroll Threshold decides (since 1.3.2).
+  /// Kept so existing code still compiles.
+  @Deprecated('Ignored. The Scroll Threshold from the Configuration Manager is used.')
+  final int? threshold;
 
   const SurveyScrollView({
     super.key,
     required this.child,
-    this.threshold = 300, 
+    @Deprecated('Ignored. The Scroll Threshold from the Configuration Manager is used.')
+    this.threshold,
   });
 
   @override
@@ -411,9 +434,7 @@ class SurveyScrollView extends StatefulWidget {
 
 class _SurveyScrollViewState extends State<SurveyScrollView> {
   final ScrollController _controller = ScrollController();
-  
-  // 🔥 The Lock: Prevents the infinite trigger loop
-  bool _hasTriggered = false; 
+  final _SurveyScrollReporter _reporter = _SurveyScrollReporter();
 
   @override
   void initState() {
@@ -422,20 +443,8 @@ class _SurveyScrollViewState extends State<SurveyScrollView> {
   }
 
   void _onScroll() {
-    final currentScrollY = _controller.offset.toInt();
-
-    // 1. If user scrolls back up above the threshold, reset the lock
-    if (_hasTriggered && currentScrollY < widget.threshold - 50) {
-      _hasTriggered = false;
-    }
-
-    // 2. Trigger exactly ONCE when crossing the threshold going down
-    if (!_hasTriggered && currentScrollY >= widget.threshold) {
-      _hasTriggered = true; // Lock it instantly!
-      
-      debugPrint("📜 [MobileSDK] Scroll threshold reached: $currentScrollY");
-      MobileSdkFlutter.triggerScroll(scrollY: 9999);
-    }
+    if (!mounted || !_controller.hasClients) return;
+    _reporter.report(context, _controller.offset);
   }
 
   @override

@@ -57,7 +57,7 @@ dependencies {
 
     //implementation(project(":mobileSDK"))
     // USE TAG NUMBER FOR NPM RELEASE
-    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.19")
+    implementation("com.github.cloud4feed:c4f_mobile_sdk:v2.0.20")
     // WHILE YOU DONT HAVE TAG NUMBER
     // implementation("com.github.cloud4feed:c4f_mobile_sdk:main-SNAPSHOT")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -72,7 +72,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.cloud4feed"
                 artifactId = "mobilesdk-react-native"
-                version = "1.3.3"
+                version = "1.3.4"
 
                 pom {
                     name.set("Survey SDK React Native")

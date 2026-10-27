@@ -2846,9 +2846,13 @@ class MobileSDK private constructor(
         }
 
         // B. Find NAVIGATION Candidates (Entering New Screen)
+        // Empty triggerScreens = any screen, the same as triggerByNavigation and the iOS SDK.
+        // (Before v2.0.20 this path, used by trackScreenView / React Native, never matched an
+        // empty list, so the same configuration opened on iOS but never on Android.)
         val navMatches = config.surveys.filter { survey ->
             survey.enableNavigationTrigger &&
-                    survey.triggerScreens.any { newScreen.contains(it, ignoreCase = true) } &&
+                    (survey.triggerScreens.isEmpty() ||
+                        survey.triggerScreens.any { newScreen.contains(it, ignoreCase = true) }) &&
                     canShowSurvey(survey)
         }
         candidates.addAll(navMatches)

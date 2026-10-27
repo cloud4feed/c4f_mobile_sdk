@@ -72,7 +72,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.cloud4feed"
                 artifactId = "mobilesdk-react-native"
-                version = "1.3.0"
+                version = "1.3.1"
 
                 pom {
                     name.set("Survey SDK React Native")

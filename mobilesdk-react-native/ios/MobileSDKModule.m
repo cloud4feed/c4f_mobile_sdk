@@ -11,33 +11,28 @@
 @interface MobileSDKModule : NSObject <RCTBridgeModule>
 @end
 
-@implementation MobileSDKModule {
-  id _urlObserver;
+// Deep links that RCTLinkingManager receives become the URL value source. Registered at image
+// load time (not in -init) so a cold-start link, which the scene delegate forwards before the
+// bridge creates this module, is not missed; C4FReactNativeBridge keeps it until initialize.
+// (RCT_EXPORT_MODULE already defines +load, hence a constructor function.) The process-wide
+// observer lives as long as the app, so it is never removed.
+__attribute__((constructor)) static void C4FRegisterDeepLinkObserver(void) {
+  [[NSNotificationCenter defaultCenter]
+      addObserverForName:@"RCTOpenURLNotification" object:nil queue:[NSOperationQueue mainQueue]
+              usingBlock:^(NSNotification *note) {
+                NSString *text = note.userInfo[@"url"];
+                NSURL *url = text ? [NSURL URLWithString:text] : nil;
+                if (url) { [C4FReactNativeBridge handleWithUrl:url]; }
+              }];
 }
+
+@implementation MobileSDKModule
 
 RCT_EXPORT_MODULE(MobileSDK)
 
 + (BOOL)requiresMainQueueSetup { return YES; }
 
 - (dispatch_queue_t)methodQueue { return dispatch_get_main_queue(); }
-
-- (instancetype)init {
-  if ((self = [super init])) {
-    // Deep links that RCTLinkingManager receives become the URL value source.
-    _urlObserver = [[NSNotificationCenter defaultCenter]
-        addObserverForName:@"RCTOpenURLNotification" object:nil queue:[NSOperationQueue mainQueue]
-                usingBlock:^(NSNotification *note) {
-                  NSString *text = note.userInfo[@"url"];
-                  NSURL *url = text ? [NSURL URLWithString:text] : nil;
-                  if (url) { [C4FReactNativeBridge handleWithUrl:url]; }
-                }];
-  }
-  return self;
-}
-
-- (void)dealloc {
-  if (_urlObserver) { [[NSNotificationCenter defaultCenter] removeObserver:_urlObserver]; }
-}
 
 #define C4F_REQUIRE_INIT                                                              \
   if (!C4FReactNativeBridge.isInitialized) {                                          \

@@ -60,3 +60,11 @@
 - `SurveyScrollView(threshold:)` is deprecated and ignored.
 - A scroll survey opens at most once per screen visit, like native apps (native Android SDK
   v2.0.19).
+
+## 1.3.3
+
+- Android: bumped native Android SDK to c4f_mobile_sdk v2.0.22. Screens, tabs and buttons reported
+  before the first configuration arrives now wait for it, so a navigation survey can open on the
+  first screen of a cold start (same as iOS). App launch surveys no longer get lost when the
+  configuration is slow.
+- Android: navigation with empty Trigger Screens matches every screen on all paths (v2.0.20).

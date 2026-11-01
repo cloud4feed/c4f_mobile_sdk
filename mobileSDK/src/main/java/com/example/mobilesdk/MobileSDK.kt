@@ -297,8 +297,12 @@ class MobileSDK private constructor(
                             "✅ SDK initialized WITH ${params.size} parameters"
                         })
                         
-                        // Load fallback config first
-                        sdk.loadFallbackConfig()
+                        // Empty fallback so `config` is usable, but NOT marked as loaded:
+                        // events reported before the first real configuration (cache or
+                        // network) wait and are evaluated against it — the first screen of a
+                        // cold start can open its navigation survey (same as the iOS SDK).
+                        // A failed fetch still ends in loadFallbackConfig() = loaded.
+                        sdk.loadFallbackConfig(markLoaded = false)
                         
                         // Auto-fetch configuration
                         android.os.Handler(android.os.Looper.getMainLooper()).post {
@@ -381,6 +385,11 @@ class MobileSDK private constructor(
     // the same screen once its cooldown passed (the native listeners lock with localTriggered).
     private val manualScrollFired = mutableSetOf<String>()
     private var manualScrollContext: String? = null
+    // Last screen / tab reported before the configuration arrived: only the latest one is
+    // evaluated when it does (pending retries for screens the user already left are dropped).
+    private var latestReportedScreen: String? = null
+    private var latestNavigationScreen: String? = null
+    private var latestTabReport: String? = null
     private var lastActivity: Activity? = null
     private var processLifecycleSetup = false
     private var lastPauseTime: Long = 0
@@ -764,13 +773,14 @@ class MobileSDK private constructor(
 
     fun triggerByNavigation(screenName: String, activity: Activity) {
         Log.d("MobileSDK", "📍 Navigation trigger called: $screenName")
+        latestNavigationScreen = screenName
         
         if (!configurationLoaded) {
             Log.d("MobileSDK", "⏳ Config not loaded, delaying navigation trigger for: $screenName")
             
-            // Store and retry after delay
+            // Store and retry after delay (only the latest screen; see trackScreenView)
             activity.window.decorView.postDelayed({
-                if (!activity.isFinishing && !activity.isDestroyed) {
+                if (!activity.isFinishing && !activity.isDestroyed && latestNavigationScreen == screenName) {
                     Log.d("MobileSDK", "🔄 Retrying navigation trigger for: $screenName")
                     triggerByNavigation(screenName, activity)
                 }
@@ -879,11 +889,12 @@ class MobileSDK private constructor(
         if (isInSurveyCooldown()) return
         
         // CHECK if config is loaded
+        latestTabReport = tabName
         if (!configurationLoaded) {
             Log.d("MobileSDK", "⏳ Config not loaded, delaying tab change trigger for: $tabName")
             
             activity.window.decorView.postDelayed({
-                if (!activity.isFinishing && !activity.isDestroyed) {
+                if (!activity.isFinishing && !activity.isDestroyed && latestTabReport == tabName) {
                     Log.d("MobileSDK", "🔄 Retrying tab change trigger for: $tabName")
                     triggerByTabChange(tabName, activity)
                 }
@@ -989,6 +1000,7 @@ class MobileSDK private constructor(
 
     fun trackScreenView(screenName: String, activity: Activity) {
         val normalizedName = screenName.lowercase().trim()
+        latestReportedScreen = normalizedName
         
         // 🛡️ FIX 2: ALWAYS set the context immediately, even if config is still downloading!
         // This ensures buttons/tabs know what screen they are on right from app launch.
@@ -998,7 +1010,9 @@ class MobileSDK private constructor(
         if (!configurationLoaded) {
             Log.d("MobileSDK", "⏳ Config not loaded yet. Context saved, retrying transition evaluation in 1s.")
             activity.window.decorView.postDelayed({
-                if (!activity.isFinishing && !activity.isDestroyed) {
+                // Only the latest screen is evaluated once the configuration arrives; a retry
+                // for a screen the user already left must not overwrite the current one.
+                if (!activity.isFinishing && !activity.isDestroyed && latestReportedScreen == normalizedName) {
                     trackScreenView(screenName, activity)
                 }
             }, 1000)
@@ -2160,13 +2174,13 @@ class MobileSDK private constructor(
         })
     }
 
-    private fun loadFallbackConfig() {
+    private fun loadFallbackConfig(markLoaded: Boolean = true) {
         // Clear existing tracking first
         resetSurveyTracking()
         
         // Load fallback config
         config = DefaultConfig.getFallbackConfig()
-        configurationLoaded = true
+        if (markLoaded) configurationLoaded = true
         
         // Initialize tracking for fallback surveys
         config.surveys.forEach { survey ->
@@ -2700,10 +2714,9 @@ class MobileSDK private constructor(
             Log.d("MobileSDK", "🛑 STOP: App launch trigger already setup!")
             return
         }
-        appLaunchTriggerSetup = true
-        // =========================
 
-        // CHECK 1: Wait for config to load
+        // CHECK 1: Wait for config to load. The "already setup" flag is set only after this
+        // check, otherwise the retry below would stop itself and app launch would never fire.
         if (!configurationLoaded) {
             Log.d("MobileSDK", "⏳ Config not loaded, delaying app launch trigger by 1s...")
             activity.window.decorView.postDelayed({
@@ -2711,6 +2724,8 @@ class MobileSDK private constructor(
             }, 1000)
             return
         }
+        appLaunchTriggerSetup = true
+        // =========================
         
         val surveysWithAppLaunch = config.surveys.filter { it.enableAppLaunchTrigger }
         

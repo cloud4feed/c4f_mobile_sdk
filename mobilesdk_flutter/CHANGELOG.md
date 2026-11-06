@@ -68,3 +68,10 @@
   first screen of a cold start (same as iOS). App launch surveys no longer get lost when the
   configuration is slow.
 - Android: navigation with empty Trigger Screens matches every screen on all paths (v2.0.20).
+
+## 1.3.4
+
+- Android: bumped native Android SDK to c4f_mobile_sdk v2.0.23. Once the app reports a screen, the SDK no
+  longer mixes in its own guessed names (Activity class name such as "mainactivity", menu titles), so
+  Navigation and Exit triggers see only the app's routes. Visible texts are no longer counted as
+  screens or tabs unless tapped.

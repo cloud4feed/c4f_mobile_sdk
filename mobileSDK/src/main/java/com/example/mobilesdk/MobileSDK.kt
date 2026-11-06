@@ -771,7 +771,33 @@ class MobileSDK private constructor(
         }
     }
 
+    /**
+     * The app reports the visible screen. From then on the SDK stops guessing screen names for this
+     * Activity (Activity class name, BottomNavigationView titles, tapped texts), so only the app's
+     * names reach the Navigation / Exit triggers (v2.0.23).
+     */
     fun triggerByNavigation(screenName: String, activity: Activity) {
+        markAppReportsScreens(activity)
+        handleNavigation(screenName, activity)
+    }
+
+    // ---- App-reported screens (v2.0.23) ---------------------------------------------------
+    // Activities (identityHashCode) in which the app itself reported a screen through
+    // triggerByNavigation / trackScreenView(name). Automatic screen naming is skipped there:
+    // before v2.0.23 it reported extra names ("mainactivity", menu titles) next to the app's own,
+    // which produced false Navigation and Exit matches.
+    private val appReportedScreenActivities = mutableSetOf<Int>()
+
+    private fun markAppReportsScreens(activity: Activity) {
+        if (appReportedScreenActivities.add(System.identityHashCode(activity))) {
+            Log.d("MobileSDK", "🧭 App reports its own screens in ${activity.javaClass.simpleName}: automatic screen names are off there")
+        }
+    }
+
+    private fun appReportsScreens(activity: Activity): Boolean =
+        System.identityHashCode(activity) in appReportedScreenActivities
+
+    private fun handleNavigation(screenName: String, activity: Activity) {
         Log.d("MobileSDK", "📍 Navigation trigger called: $screenName")
         latestNavigationScreen = screenName
         
@@ -782,7 +808,7 @@ class MobileSDK private constructor(
             activity.window.decorView.postDelayed({
                 if (!activity.isFinishing && !activity.isDestroyed && latestNavigationScreen == screenName) {
                     Log.d("MobileSDK", "🔄 Retrying navigation trigger for: $screenName")
-                    triggerByNavigation(screenName, activity)
+                    handleNavigation(screenName, activity)
                 }
             }, 1000)
             return
@@ -876,7 +902,7 @@ class MobileSDK private constructor(
             // Retry if activity is still valid
             if (!activity.isFinishing && !activity.isDestroyed) {
                 Log.d("MobileSDK", "🔄 Retrying pending navigation: $screenName")
-                triggerByNavigation(screenName, activity)
+                handleNavigation(screenName, activity)
                 entriesToRemove.add(screenName)
             }
         }
@@ -972,7 +998,9 @@ class MobileSDK private constructor(
             }
 
             screenTimers[currentScreen] = System.currentTimeMillis()
-            triggerByNavigation(currentScreen, activity)
+            // NavController destinations are an automatic name ("screen_<id>"): skipped when the
+            // app reports its own screens in this Activity.
+            if (!appReportsScreens(activity)) handleNavigation(currentScreen, activity)
 
             previousScreen = currentScreen
             previousScreenLabel = screenLabel
@@ -992,13 +1020,22 @@ class MobileSDK private constructor(
         
         // 🛡️ FIX 1: Stop Android's "MainActivity" from overwriting React Native's "home"
         if (isHybridMode) return 
+        // v2.0.23: the app names its screens in this Activity; the class name would be a second,
+        // wrong name (e.g. "mainactivity" between "home" and "home").
+        if (appReportsScreens(activity)) return
         
         val rawName = activity.javaClass.simpleName
-        trackScreenView(rawName, activity)
+        trackScreenInternal(rawName, activity)
         Log.d("MobileSDK", "Screen view tracked for: $rawName")
     }
 
+    /** The app reports the visible screen (same effect on automatic naming as triggerByNavigation). */
     fun trackScreenView(screenName: String, activity: Activity) {
+        markAppReportsScreens(activity)
+        trackScreenInternal(screenName, activity)
+    }
+
+    private fun trackScreenInternal(screenName: String, activity: Activity) {
         val normalizedName = screenName.lowercase().trim()
         latestReportedScreen = normalizedName
         
@@ -1013,7 +1050,7 @@ class MobileSDK private constructor(
                 // Only the latest screen is evaluated once the configuration arrives; a retry
                 // for a screen the user already left must not overwrite the current one.
                 if (!activity.isFinishing && !activity.isDestroyed && latestReportedScreen == normalizedName) {
-                    trackScreenView(screenName, activity)
+                    trackScreenInternal(screenName, activity)
                 }
             }, 1000)
             return
@@ -2918,71 +2955,11 @@ class MobileSDK private constructor(
             Log.d("MobileSDK", "⚠️ Navigation component auto-detection failed")
         }
 
-        val rootView = activity.window.decorView
-        var lastClickedText: String? = null
-
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-            try {
-                findAndTrackScreenText(rootView, activity, lastClickedText)?.let { newText ->
-                    lastClickedText = newText
-                }
-            } catch (e: Exception) {
-                // Ignore errors
-            }
-        }
-    }
-
-    private fun findAndTrackScreenText(view: View, activity: Activity, lastText: String?): String? {
-        if (view is TextView && view.isClickable && !view.text.isNullOrEmpty()) {
-            val currentText = view.text.toString().trim()
-            if (currentText.length > 25) return null
-
-            if (currentText == lastText) {
-                return null
-            }
-
-            if (isInSurveyCooldown()) {
-                Log.d("MobileSDK", "🛡️ Auto-Tracking blocked by cooldown: $currentText")
-                return currentText
-            }
-
-            Log.d("MobileSDK", "👀 Detected NEW text: $currentText (Old: $lastText)")
-
-            val isTab = config.surveys.any { survey ->
-                survey.enableTabChangeTrigger &&
-                        survey.triggerTabs.any { it.equals(currentText, ignoreCase = true) }
-            }
-
-            val isNav = config.surveys.any { survey ->
-                survey.enableNavigationTrigger &&
-                        survey.triggerScreens.any { it.equals(currentText, ignoreCase = true) }
-            }
-
-            return when {
-                isTab -> {
-                    Log.d("MobileSDK", "🛡️ Auto-Tracking: '$currentText' is a TAB.")
-                    triggerByTabChange(currentText, activity)
-                    currentText
-                }
-                isNav -> {
-                    Log.d("MobileSDK", "🔄 Auto-Tracking: '$currentText' is a SCREEN.")
-                    trackScreenView(currentText, activity)
-                    currentText
-                }
-                else -> {
-                    Log.d("MobileSDK", "💤 Auto-Tracking: '$currentText' ignored (Not in config)")
-                    null
-                }
-            }
-        }
-
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                val result = findAndTrackScreenText(view.getChildAt(i), activity, lastText)
-                if (result != null) return result
-            }
-        }
-        return null
+        // v2.0.23: the global-layout text scan (findAndTrackScreenText) was removed. It reported a
+        // screen or tab whenever a clickable TextView whose text equals a Trigger Screens / Trigger
+        // Tabs name was merely VISIBLE, e.g. a "Demo" button opened the "Demo" survey on the first
+        // layout change. Texts now count only when tapped (scanAndAttachListenersSafely ->
+        // attachPassiveTouchListener), and never in an Activity whose screens the app reports.
     }
 
     private fun trackScreenChange(newScreen: String, activity: Activity) {
@@ -3191,8 +3168,12 @@ class MobileSDK private constructor(
                                         val screenName = item.title?.toString()?.toLowerCase() ?: "tab_$currentSelectedId"
 
                                         Handler(Looper.getMainLooper()).post {
-                                            Log.d("MobileSDK", "🛡️ Safety mode - Observed nav change: $screenName")
-                                            triggerByNavigation(screenName, activity)
+                                            if (appReportsScreens(activity)) {
+                                                Log.d("MobileSDK", "🧭 Menu title '$screenName' ignored: the app reports its own screens")
+                                            } else {
+                                                Log.d("MobileSDK", "🛡️ Safety mode - Observed nav change: $screenName")
+                                                handleNavigation(screenName, activity)
+                                            }
                                         }
                                         break
                                     }
@@ -3250,9 +3231,11 @@ class MobileSDK private constructor(
                         if (isTab) {
                             Log.d("MobileSDK", "✅ Identified as TAB: '$identifier'")
                             triggerByTabChange(identifier, activity)
+                        } else if (appReportsScreens(activity)) {
+                            Log.d("MobileSDK", "🧭 Menu title '$identifier' ignored: the app reports its own screens")
                         } else {
                             Log.d("MobileSDK", "✅ Identified as SCREEN: '$identifier'")
-                            triggerByNavigation(identifier, activity)
+                            handleNavigation(identifier, activity)
                         }
                     }
                     
@@ -3311,9 +3294,11 @@ class MobileSDK private constructor(
                                 if (isDefinedAsTab) {
                                     Log.d("MobileSDK", "✅ Identified as TAB: '$identifier' -> Running Tab Logic")
                                     triggerByTabChange(identifier, activity)
+                                } else if (appReportsScreens(activity)) {
+                                    Log.d("MobileSDK", "🧭 Menu title '$identifier' ignored: the app reports its own screens")
                                 } else {
                                     Log.d("MobileSDK", "🔄 Identified as SCREEN: '$identifier' -> Running Screen Logic")
-                                    trackScreenView(identifier, activity)
+                                    trackScreenInternal(identifier, activity)
                                 }
                             }
                             break
@@ -3347,7 +3332,7 @@ class MobileSDK private constructor(
                     navController.addOnDestinationChangedListener { _, destination, _ ->
                         val screenName = destination.label?.toString() ?: "screen_${destination.id}"
                         Log.d("MobileSDK", "📍 Navigation Component: $screenName")
-                        triggerByNavigation(screenName, activity)
+                        if (!appReportsScreens(activity)) handleNavigation(screenName, activity)
                         triggerByTabChange(screenName, activity)
                     }
 
@@ -3637,7 +3622,13 @@ class MobileSDK private constructor(
                     triggerByTabChange(identifier, activity)
                 }
                 "NAVIGATION_TEXT" -> {
-                    trackScreenView(identifier, activity)
+                    // A tapped text equal to a Trigger Screens name. Only a guess, so it is
+                    // ignored when the app reports its own screens in this Activity.
+                    if (appReportsScreens(activity)) {
+                        Log.d("MobileSDK", "🧭 Tapped text '$identifier' ignored: the app reports its own screens")
+                    } else {
+                        trackScreenInternal(identifier, activity)
+                    }
                 }
                 "BUTTON" -> {
                     triggerButtonByStringId(identifier, activity)

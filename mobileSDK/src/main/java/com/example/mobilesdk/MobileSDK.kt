@@ -1919,13 +1919,31 @@ class MobileSDK private constructor(
     // ====================================================================
     // PRIVATE METHODS - URL & DATA BUILDING
     // ====================================================================
+    /**
+     * Adds custom parameters to the survey URL (v2.0.24). Before, "&" was always appended: a
+     * transactional short link without "?" (https://c4feed.in/abc) became "https://c4feed.in/abc&",
+     * which the short-link service does not know and redirects to its http:// fallback page
+     * (blocked by Android: ERR_CLEARTEXT_NOT_PERMITTED). Same rules as the iOS SDK
+     * (SurveyURLBuilder.build): no parameters -> URL unchanged; ends with "?" or "&" -> append
+     * directly; contains "?" -> "&"; otherwise -> "?".
+     */
+    internal fun appendQuery(baseUrl: String, query: String): String {
+        if (query.isEmpty()) return baseUrl
+        val separator = when {
+            baseUrl.endsWith("?") || baseUrl.endsWith("&") -> ""
+            baseUrl.contains('?') -> "&"
+            else -> "?"
+        }
+        return baseUrl + separator + query
+    }
+
     private fun buildSurveyUrl(survey: SurveyConfig): String {
         Log.d("MobileSDK", "🔗 === BUILD SURVEY URL ===")
         
         return try {
             val params = collectAllData(survey)
             val queryString = params.entries.joinToString("&") { "${it.key}=${it.value}" }
-            val finalUrl = "${survey.baseUrl}&$queryString"
+            val finalUrl = appendQuery(survey.baseUrl, queryString)
             
             Log.d("MobileSDK", "📝 Base URL: ${survey.baseUrl}")
             Log.d("MobileSDK", "📝 Query params: $queryString")

@@ -75,3 +75,9 @@
   longer mixes in its own guessed names (Activity class name such as "mainactivity", menu titles), so
   Navigation and Exit triggers see only the app's routes. Visible texts are no longer counted as
   screens or tabs unless tapped.
+
+## 1.3.5
+
+- Android: bumped native Android SDK to c4f_mobile_sdk v2.0.24. Custom parameters are added to the survey
+  URL with "?" when the URL has no query yet. Transactional short links (https://c4feed.in/abc) no longer get
+  a trailing "&" that broke them ("Survey Loading Failed" / ERR_CLEARTEXT_NOT_PERMITTED).

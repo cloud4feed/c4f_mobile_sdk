@@ -7,7 +7,7 @@ Cloud4Feed survey SDK for Flutter: automatic triggers, user targeting and exclus
 
 ```yaml
 dependencies:
-  cloud4feed_mobilesdk_flutter: ^1.3.4
+  cloud4feed_mobilesdk_flutter: ^1.3.5
 ```
 
 ### Android

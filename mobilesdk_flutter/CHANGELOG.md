@@ -81,3 +81,8 @@
 - Android: bumped native Android SDK to c4f_mobile_sdk v2.0.24. Custom parameters are added to the survey
   URL with "?" when the URL has no query yet. Transactional short links (https://c4feed.in/abc) no longer get
   a trailing "&" that broke them ("Survey Loading Failed" / ERR_CLEARTEXT_NOT_PERMITTED).
+
+## 1.3.6
+
+- Android: bumped native Android SDK to c4f_mobile_sdk v2.0.25. Bottom Sheet surveys now scroll: the sheet
+  opens fully expanded at its visible height, so the WebView no longer extends below the screen.

@@ -6,7 +6,7 @@ package com.c4f.mobileSDK
  */
 object SDKConstants {
     // ===== SDK VERSION =====
-    const val SDK_VERSION = "2.0.24"
+    const val SDK_VERSION = "2.0.25"
     const val SDK_NAME = "MobileSDK"
 
     // ===== API CONFIGURATION =====

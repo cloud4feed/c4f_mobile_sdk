@@ -22,6 +22,9 @@ class SurveyBottomSheetFragment : BottomSheetDialogFragment() {
         private const val ARG_BACKGROUND_COLOR = "BACKGROUND_COLOR"
         private const val ARG_ALLOWED_DOMAIN = "ALLOWED_DOMAIN"
 
+        /** Visible sheet height (unchanged from earlier versions: the old peek height). */
+        private const val SHEET_HEIGHT_PX = 800
+
         fun newInstance(
             surveyUrl: String,
             backgroundColor: String = "#FFFFFF",
@@ -146,16 +149,25 @@ class SurveyBottomSheetFragment : BottomSheetDialogFragment() {
             bottomSheet.setBackgroundColor(Color.TRANSPARENT)
 
             val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(bottomSheet)
-            
+
             // 🛑 Disable "Swipe Down to Close"
-            behavior.isHideable = false 
-            
-            // 🛑 Disable dragging entirely (optional, keeps it fixed)
-            behavior.isDraggable = false 
-            
-            behavior.isFitToContents = false
-            behavior.halfExpandedRatio = 0.7f
-            behavior.peekHeight = 800
+            behavior.isHideable = false
+
+            // 🛑 Disable dragging entirely (keeps it fixed; the X button closes it)
+            behavior.isDraggable = false
+
+            // The sheet itself must be exactly as tall as its visible part. Before v2.0.25 the
+            // sheet was left collapsed (peek 800px, fitToContents=false) while its WebView was laid
+            // out at full screen height: the bottom of the survey sat off screen and the WebView
+            // had nothing to scroll, so the survey could not be scrolled. Now the WebView viewport
+            // equals the visible area and the page scrolls inside it.
+            val sheetHeight = SHEET_HEIGHT_PX.coerceAtMost(resources.displayMetrics.heightPixels)
+            bottomSheet.layoutParams = bottomSheet.layoutParams.apply { height = sheetHeight }
+            behavior.isFitToContents = true
+            behavior.skipCollapsed = true
+            behavior.peekHeight = sheetHeight
+            behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+            Log.d("SurveyBottomSheet", "Sheet height: $sheetHeight px (screen ${resources.displayMetrics.heightPixels} px)")
         }
     }
 
